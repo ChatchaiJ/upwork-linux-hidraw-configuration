@@ -3,6 +3,9 @@
 SOURCEDIR="${SOURCEDIR:-linux-5.10.158}"
 CONFIG="${CONFIG:-/boot/config-5.10.0-18-amd64}"
 
+# Default of HIDRAW_MAX_DEVICES is 64
+MAX_DEVICES=256
+
 ## System preparation
 apt-get update
 
@@ -32,7 +35,7 @@ cd $SOURCEDIR
 fakeroot make -f debian/rules.gen setup_amd64_none_amd64
 
 ### HERE we change HIDRAW_MAX_DEVICES from 64 to 256 ###
-sed -i -e 's/HIDRAW_MAX_DEVICES 64/HIDRAW_MAX_DEVICES 256/' include/uapi/linux/hidraw.h
+sed -i -e "s/HIDRAW_MAX_DEVICES 64/HIDRAW_MAX_DEVICES $MAX_DEVICES/" include/uapi/linux/hidraw.h
 
 ### Using existing kernel config as template ###
 cat $CONFIG | \
